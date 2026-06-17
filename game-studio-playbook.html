@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Playbook for Game Studio Use Cases · iGOT.AI</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0f12;
+      --surface: #13161b;
+      --surface2: #1a1e26;
+      --border: #252a35;
+      --border2: #2e3547;
+      --accent: #e8a020;
+      --accent2: #f0b840;
+      --accent-dim: rgba(232, 160, 32, 0.12);
+      --accent-dim2: rgba(232, 160, 32, 0.06);
+      --text: #d4d8e2;
+      --text-dim: #7a8399;
+      --text-dimmer: #4a5168;
+      --green: #3dd68c;
+      --blue: #5b9cf6;
+      --red: #f06464;
+      --purple: #a78bfa;
+      --teal: #2dd4bf;
+      --sidebar-w: 280px;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'IBM Plex Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.7; display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    nav { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 100; padding-bottom: 48px; }
+    .nav-header { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .nav-logo { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
+    .nav-title { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .nav-version { font-family: var(--mono); font-size: 10px; color: var(--text-dimmer); margin-top: 6px; }
+    .nav-section-label { font-family: var(--mono); font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dimmer); padding: 16px 20px 6px; }
+    nav a { display: flex; align-items: center; gap: 10px; padding: 7px 20px; font-size: 12.5px; color: var(--text-dim); text-decoration: none; transition: all 0.15s; border-left: 2px solid transparent; }
+    nav a:hover { color: var(--text); background: var(--accent-dim2); border-left-color: var(--border2); }
+    nav a.active { color: var(--accent); background: var(--accent-dim); border-left-color: var(--accent); }
+    nav a .nav-num { font-family: var(--mono); font-size: 10px; color: var(--text-dimmer); min-width: 20px; }
+
+    /* ── MAIN ── */
+    main { margin-left: var(--sidebar-w); flex: 1; max-width: 900px; padding: 64px 56px 120px; }
+
+    /* ── HERO ── */
+    .hero { margin-bottom: 72px; padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+    .hero-tag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    .hero h1 { font-size: 38px; font-weight: 700; line-height: 1.15; color: #fff; margin-bottom: 20px; letter-spacing: -0.02em; }
+    .hero h1 span { color: var(--accent); }
+    .hero-desc { font-size: 16px; color: var(--text-dim); font-weight: 300; max-width: 600px; line-height: 1.75; }
+    .hero-meta { display: flex; gap: 24px; margin-top: 28px; flex-wrap: wrap; }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .hero-meta-label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dimmer); }
+    .hero-meta-value { font-size: 12.5px; font-weight: 600; color: var(--text-dim); }
+
+    /* ── SECTIONS ── */
+    section { margin-bottom: 80px; scroll-margin-top: 32px; }
+    .section-eyebrow { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 200px; }
+    h2 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 20px; letter-spacing: -0.02em; line-height: 1.2; }
+    h3 { font-size: 11px; font-weight: 700; color: var(--accent2); margin: 32px 0 10px; font-family: var(--mono); letter-spacing: 0.04em; text-transform: uppercase; }
+    h4 { font-size: 14px; font-weight: 600; color: #fff; margin: 24px 0 8px; }
+    p { color: var(--text); margin-bottom: 16px; line-height: 1.8; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: #fff; font-weight: 600; }
+    em { color: var(--accent2); font-style: italic; }
+
+    /* ── CALLOUT ── */
+    .callout { background: var(--accent-dim); border: 1px solid rgba(232,160,32,0.3); border-radius: 6px; padding: 18px 20px; margin: 24px 0; position: relative; overflow: hidden; }
+    .callout::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+    .callout-label { font-family: var(--mono); font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .callout p { color: var(--text-dim); margin-bottom: 0; font-size: 14px; }
+    .callout strong { color: var(--accent2); }
+    .callout.green { background: rgba(61,214,140,0.07); border-color: rgba(61,214,140,0.25); }
+    .callout.green::before { background: var(--green); }
+    .callout.green .callout-label { color: var(--green); }
+    .callout.red { background: rgba(240,100,100,0.07); border-color: rgba(240,100,100,0.25); }
+    .callout.red::before { background: var(--red); }
+    .callout.red .callout-label { color: var(--red); }
+    .callout.blue { background: rgba(91,156,246,0.07); border-color: rgba(91,156,246,0.25); }
+    .callout.blue::before { background: var(--blue); }
+    .callout.blue .callout-label { color: var(--blue); }
+    .callout.purple { background: rgba(167,139,250,0.07); border-color: rgba(167,139,250,0.25); }
+    .callout.purple::before { background: var(--purple); }
+    .callout.purple .callout-label { color: var(--purple); }
+
+    /* ── CODE ── */
+    pre { background: #0a0c10; border: 1px solid var(--border); border-radius: 6px; padding: 20px 22px; overflow-x: auto; margin: 20px 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.65; color: #b8c0d0; }
+    code { font-family: var(--mono); font-size: 12.5px; background: var(--surface2); padding: 2px 6px; border-radius: 3px; color: var(--accent2); border: 1px solid var(--border); }
+    pre code { background: none; border: none; padding: 0; font-size: inherit; color: inherit; }
+    .code-kw { color: var(--purple); }
+    .code-str { color: var(--green); }
+    .code-comment { color: var(--text-dimmer); font-style: italic; }
+    .code-key { color: var(--blue); }
+    .code-val { color: var(--accent2); }
+    .code-tag { color: var(--red); }
+    .code-teal { color: var(--teal); }
+
+    /* ── TABLES ── */
+    .table-wrap { overflow-x: auto; margin: 24px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border2); background: var(--surface2); }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; line-height: 1.6; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--accent-dim2); }
+    td strong { color: var(--accent2); }
+
+    /* ── FLOW ── */
+    .flow { display: flex; align-items: flex-start; gap: 0; margin: 28px 0; overflow-x: auto; padding: 4px 0 12px; }
+    .flow-step { display: flex; flex-direction: column; align-items: center; min-width: 110px; gap: 8px; }
+    .flow-box { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 12px 10px; text-align: center; font-size: 12px; font-weight: 600; color: var(--text); width: 100%; line-height: 1.3; transition: border-color 0.2s, background 0.2s; }
+    .flow-box:hover { border-color: var(--accent); background: var(--accent-dim); }
+    .flow-box.accent { border-color: var(--accent); background: var(--accent-dim); color: var(--accent2); }
+    .flow-box.green { border-color: rgba(61,214,140,0.4); background: rgba(61,214,140,0.07); color: var(--green); }
+    .flow-box.red { border-color: rgba(240,100,100,0.4); background: rgba(240,100,100,0.07); color: var(--red); }
+    .flow-box.blue { border-color: rgba(91,156,246,0.4); background: rgba(91,156,246,0.07); color: var(--blue); }
+    .flow-box.purple { border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.07); color: var(--purple); }
+    .flow-label { font-family: var(--mono); font-size: 9px; color: var(--text-dimmer); text-align: center; }
+    .flow-arrow { display: flex; align-items: center; padding: 0 4px; margin-top: 20px; color: var(--text-dimmer); font-size: 18px; }
+    .flow-down { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 24px 0; }
+    .flow-down .flow-box { width: 340px; }
+    .flow-down .flow-arrow { margin-top: 0; margin-bottom: 0; font-size: 20px; padding: 4px 0; }
+
+    /* ── CARDS ── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin: 24px 0; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px; transition: border-color 0.2s, transform 0.2s; }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card-icon { font-size: 22px; margin-bottom: 10px; }
+    .card h4 { margin: 0 0 6px; font-size: 13.5px; color: var(--accent2); }
+    .card p { font-size: 12.5px; color: var(--text-dim); margin: 0; line-height: 1.6; }
+
+    /* ── CHECKLIST ── */
+    .checklist { list-style: none; padding: 0; margin: 16px 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; font-size: 13.5px; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before { content: '□'; font-family: var(--mono); color: var(--text-dimmer); font-size: 13px; margin-top: 1px; flex-shrink: 0; }
+    .checklist li strong { color: var(--text); }
+
+    /* ── BADGE ── */
+    .badge { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.08em; text-transform: uppercase; vertical-align: middle; margin-left: 6px; }
+    .badge-researcher { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+    .badge-designer { background: rgba(91,156,246,0.15); color: var(--blue); border: 1px solid rgba(91,156,246,0.3); }
+    .badge-pm { background: rgba(232,160,32,0.15); color: var(--accent); border: 1px solid rgba(232,160,32,0.3); }
+    .badge-liveops { background: rgba(61,214,140,0.12); color: var(--green); border: 1px solid rgba(61,214,140,0.3); }
+    .badge-econ { background: rgba(45,212,191,0.12); color: var(--teal); border: 1px solid rgba(45,212,191,0.3); }
+    .badge-mono { background: rgba(240,100,100,0.12); color: var(--red); border: 1px solid rgba(240,100,100,0.3); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; height: 1px; background: var(--border); margin: 48px 0; }
+
+    /* ── BLOCKQUOTE ── */
+    blockquote { border-left: 3px solid var(--accent); padding: 12px 20px; margin: 24px 0; background: var(--accent-dim2); border-radius: 0 6px 6px 0; font-size: 15px; font-style: italic; color: var(--text-dim); }
+    blockquote strong { color: var(--accent2); }
+
+    /* ── SKILL BLOCK ── */
+    .skill-block { background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 20px 24px; margin: 20px 0; }
+    .skill-block-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .skill-filename { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent2); }
+    .skill-block h4 { margin: 12px 0 6px; font-size: 11px; font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dimmer); }
+    .skill-block p, .skill-block li { font-size: 13.5px; color: var(--text-dim); }
+    .skill-block ul { padding-left: 18px; margin: 6px 0; }
+    .skill-block li { margin-bottom: 4px; }
+
+    /* ── ROLE BLOCK ── */
+    .role-block { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin: 24px 0; }
+    .role-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    .role-name { font-size: 18px; font-weight: 700; color: #fff; }
+    .role-mission { font-size: 13.5px; color: var(--text-dim); line-height: 1.6; }
+    .role-section { margin-top: 16px; }
+    .role-section-label { font-family: var(--mono); font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dimmer); margin-bottom: 6px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag { font-family: var(--mono); font-size: 10.5px; padding: 3px 9px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border2); color: var(--text-dim); }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dimmer); }
+
+    @media (max-width: 900px) {
+      nav { display: none; }
+      main { margin-left: 0; padding: 32px 20px 80px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── SIDEBAR ── -->
+  <nav id="sidebar">
+    <div class="nav-header">
+      <div class="nav-logo">iGOT.AI</div>
+      <div class="nav-title">Game Studio Prompt Playbook</div>
+      <div class="nav-version">v1.0 · Internal · 2026</div>
+    </div>
+
+    <div class="nav-section-label">Research</div>
+    <a href="#workflows"><span class="nav-num">P1</span>Studio Workflow Research</a>
+
+    <div class="nav-section-label">People</div>
+    <a href="#roles"><span class="nav-num">P2</span>Role Catalog</a>
+
+    <div class="nav-section-label">AI Design</div>
+    <a href="#ai-roles"><span class="nav-num">P3</span>AI Role Design</a>
+
+    <div class="nav-section-label">Use Cases</div>
+    <a href="#use-cases"><span class="nav-num">P4</span>Use Case Catalog</a>
+
+    <div class="nav-section-label">Skills</div>
+    <a href="#skills"><span class="nav-num">P5</span>Skill Architecture</a>
+
+    <div class="nav-section-label">Composition</div>
+    <a href="#composition"><span class="nav-num">P6</span>Workflow Composition</a>
+
+    <div class="nav-section-label">Templates</div>
+    <a href="#templates"><span class="nav-num">P7</span>Prompt Templates</a>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">// Game Studio Intelligence · Internal</div>
+      <h1>Prompt Playbook for<br /><span>Game Studio Use Cases.</span></h1>
+      <p class="hero-desc">
+        An AI-powered Game Studio Operating System. Maps every major role, workflow, and decision point in modern
+        game development to reusable AI skills — from market discovery to LiveOps optimization.
+        <strong>Role → Skill → Output. Every time.</strong>
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Audience</span>
+          <span class="hero-meta-value">Game PMs, Designers, Researchers</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Framework</span>
+          <span class="hero-meta-value">Role → Skill → Output</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Reference Studios</span>
+          <span class="hero-meta-value">Supercell · King · EA · Riot · Scopely</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Parts</span>
+          <span class="hero-meta-value">7 Parts · 9 Roles · 30+ Skills</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART 1 — STUDIO WORKFLOW RESEARCH                         -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <section id="workflows">
+      <div class="section-eyebrow">Part 1 · Research</div>
+      <h2>Global Game Studio Workflow Research</h2>
+      <p>
+        Analysis of how leading studios — Supercell, Scopely, King, Zynga, Playrix, Riot Games, EA, and Ubisoft — 
+        structure their core workflows. Five universal patterns emerge regardless of studio size or genre.
+        Every workflow ends in a <strong>business decision gate</strong>.
+      </p>
+
+      <!-- WF1 -->
+      <h3>Workflow 1 · New Game Discovery & Validation</h3>
+      <p><strong>Business Goal:</strong> Identify whether a new game concept has sufficient market demand, differentiation, and monetization potential to justify prototype investment.</p>
+      <p><strong>Why it exists:</strong> Studios like Supercell famously kill more games than they ship. A structured discovery workflow reduces the cost of wrong bets by front-loading market intelligence before a single line of code is written.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Stage</th><th>Role</th><th>Activity</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. Signal Detection</strong></td><td>Game Researcher</td><td>Monitor trends, competitors, app store data</td><td>Trend Report</td></tr>
+            <tr><td><strong>2. Market Sizing</strong></td><td>Game Researcher + PM</td><td>Estimate TAM, genre saturation, revenue benchmarks</td><td>Market Analysis Report</td></tr>
+            <tr><td><strong>3. Concept Formation</strong></td><td>Game Designer</td><td>Define core loop, genre, target persona</td><td>Concept Brief</td></tr>
+            <tr><td><strong>4. Competitor Scan</strong></td><td>Game Researcher</td><td>Deconstruct top 3 competitors</td><td>Competitor Report</td></tr>
+            <tr><td><strong>5. Player Motivation</strong></td><td>UX Researcher</td><td>Map player motivations to concept fit</td><td>Player Motivation Profile</td></tr>
+            <tr><td><strong>6. KPI Forecast</strong></td><td>Product Analyst</td><td>Model D1/D7/D30 retention & LTV estimates</td><td>KPI Forecast</td></tr>
+            <tr><td><strong>7. Go/No-Go</strong></td><td>PM + Studio Head</td><td>Evaluate all inputs, decide</td><td>Decision Report</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box accent">Market Signal</div><div class="flow-label">Researcher</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box">Competitor Scan</div><div class="flow-label">Researcher</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box">Player Motivation</div><div class="flow-label">UX Researcher</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box">KPI Forecast</div><div class="flow-label">Analyst</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box green">Go / No-Go</div><div class="flow-label">PM + Studio Head</div></div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- WF2 -->
+      <h3>Workflow 2 · Prototype Evaluation</h3>
+      <p><strong>Business Goal:</strong> Determine if a playable prototype demonstrates sufficient core loop quality, fun factor, and retention potential to warrant full production.</p>
+      <p><strong>Why it exists:</strong> Riot Games and EA run structured "greenlight" reviews. A prototype that passes gut feel but fails data tests is killed before teams scale. The workflow separates subjective experience from objective signals.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Stage</th><th>Role</th><th>Activity</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. Playtest Design</strong></td><td>UX Researcher</td><td>Design test protocol, recruit testers</td><td>Playtest Plan</td></tr>
+            <tr><td><strong>2. Core Loop Analysis</strong></td><td>Game Designer</td><td>Evaluate loop clarity, feedback cadence, flow state</td><td>Core Loop Audit</td></tr>
+            <tr><td><strong>3. Engagement Metrics</strong></td><td>Product Analyst</td><td>Analyze session length, D1 retention, action density</td><td>Engagement Report</td></tr>
+            <tr><td><strong>4. Monetization Fit</strong></td><td>Economy Designer</td><td>Assess monetization opportunity vs genre benchmark</td><td>Monetization Assessment</td></tr>
+            <tr><td><strong>5. Greenlight Decision</strong></td><td>Producer + PM</td><td>Score against criteria, decide full production</td><td>Greenlight Report</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- WF3 -->
+      <h3>Workflow 3 · LiveOps Optimization</h3>
+      <p><strong>Business Goal:</strong> Maximize player retention and revenue through a continuous calendar of events, offers, and content updates informed by behavioral data.</p>
+      <p><strong>Why it exists:</strong> King (Candy Crush) and Scopely operate games that are years old with thriving revenue. LiveOps is the engine. A structured workflow prevents event fatigue, missed revenue windows, and player churn spikes.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Stage</th><th>Role</th><th>Activity</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. Performance Audit</strong></td><td>Product Analyst</td><td>Review prior event KPIs: participation, revenue, churn</td><td>LiveOps Performance Report</td></tr>
+            <tr><td><strong>2. Calendar Planning</strong></td><td>LiveOps Manager</td><td>Design 30/60/90-day event calendar</td><td>Event Calendar</td></tr>
+            <tr><td><strong>3. Content Design</strong></td><td>Game Designer</td><td>Write event brief: mechanics, rewards, narrative</td><td>Event Design Brief</td></tr>
+            <tr><td><strong>4. Economy Balancing</strong></td><td>Economy Designer</td><td>Model reward curves, currency sinks, IAP anchors</td><td>Economy Balance Sheet</td></tr>
+            <tr><td><strong>5. A/B Testing</strong></td><td>Product Analyst</td><td>Define test variants, success metrics, sample size</td><td>A/B Test Plan</td></tr>
+            <tr><td><strong>6. Post-Mortem</strong></td><td>LiveOps Manager + Analyst</td><td>Evaluate results, document learnings</td><td>Event Post-Mortem Report</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- WF4 -->
+      <h3>Workflow 4 · Monetization Optimization</h3>
+      <p><strong>Business Goal:</strong> Increase ARPU and LTV by optimizing IAP catalog, offer design, pricing, and whales-to-dolphins conversion funnel.</p>
+      <p><strong>Why it exists:</strong> Zynga and Playrix generate 70%+ of revenue from fewer than 5% of players. Without a systematic monetization workflow, revenue is left on the table through poor offer timing, miscalibrated prices, or weak progression gates.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Stage</th><th>Role</th><th>Activity</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. Funnel Audit</strong></td><td>Product Analyst</td><td>Map first-purchase funnel, identify drop-off points</td><td>Funnel Analysis Report</td></tr>
+            <tr><td><strong>2. Segment Analysis</strong></td><td>Product Analyst</td><td>Profile minnows, dolphins, whales by behavior</td><td>Payer Segment Report</td></tr>
+            <tr><td><strong>3. Offer Redesign</strong></td><td>Monetization Designer</td><td>Redesign IAP catalog: anchors, bundles, time-limits</td><td>Offer Design Spec</td></tr>
+            <tr><td><strong>4. Pricing Test</strong></td><td>Economy Designer</td><td>Run price elasticity experiments</td><td>Pricing Test Report</td></tr>
+            <tr><td><strong>5. Conversion Campaign</strong></td><td>LiveOps Manager</td><td>Design first-purchase incentive sequence</td><td>Conversion Campaign Brief</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- WF5 -->
+      <h3>Workflow 5 · Feature Innovation Research</h3>
+      <p><strong>Business Goal:</strong> Identify and validate a new feature that can meaningfully improve retention or revenue before committing to development.</p>
+      <p><strong>Why it exists:</strong> Riot Games uses systematic "opportunity mapping" to find feature gaps. Without this workflow, feature development is driven by gut feel, copying competitors, or internal politics — all expensive sources of error.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Stage</th><th>Role</th><th>Activity</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. Behavioral Gap Analysis</strong></td><td>UX Researcher + Analyst</td><td>Identify where players disengage in the current build</td><td>Retention Gap Report</td></tr>
+            <tr><td><strong>2. Competitive Features Scan</strong></td><td>Game Researcher</td><td>Survey competitor feature sets for proven patterns</td><td>Feature Benchmark Report</td></tr>
+            <tr><td><strong>3. Player Interview</strong></td><td>UX Researcher</td><td>Run Jobs-to-be-Done interviews, identify unmet needs</td><td>Player Insight Report</td></tr>
+            <tr><td><strong>4. Feature Brief</strong></td><td>Game Designer + PM</td><td>Write the feature proposal: what, why, expected impact</td><td>Feature Brief / mini-GDD</td></tr>
+            <tr><td><strong>5. Impact Forecast</strong></td><td>Product Analyst</td><td>Model retention and revenue impact</td><td>Feature ROI Forecast</td></tr>
+            <tr><td><strong>6. Build / Don't Build</strong></td><td>PM + Producer</td><td>Prioritize against roadmap</td><td>Roadmap Decision</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART 2 — ROLE CATALOG                                     -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <section id="roles">
+      <div class="section-eyebrow">Part 2 · People</div>
+      <h2>Role Catalog</h2>
+      <p>
+        Nine core roles found across modern game studios. Each role has a distinct mission, stakeholder set, and deliverable stack. 
+        Understanding these roles is the prerequisite for designing AI counterparts in Part 3.
+      </p>
+
+      <!-- Game Researcher -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">Game Researcher <span class="badge badge-researcher">Researcher</span></div>
+            <div class="role-mission" style="margin-top:8px;">The studio's intelligence function. Translates raw market and player data into strategic direction for product and design teams.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Responsibilities</div>
+          <p style="font-size:13.5px; color:var(--text-dim);">Market sizing and trend monitoring · Competitor game deconstruction · Player motivation profiling · Research-to-GDD translation · KPI benchmarking against genre</p>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">Market Analysis Report</span>
+            <span class="tag">Competitor Deconstruction</span>
+            <span class="tag">Player Motivation Profile</span>
+            <span class="tag">Trend Report</span>
+            <span class="tag">Feature Benchmark Report</span>
+            <span class="tag">Research Brief</span>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Stakeholders</div>
+          <p style="font-size:13.5px; color:var(--text-dim);">Product Manager (primary consumer) · Game Designer (GDD handoff) · Studio Head (go/no-go input)</p>
+        </div>
+      </div>
+
+      <!-- Game Designer -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">Game Designer <span class="badge badge-designer">Designer</span></div>
+            <div class="role-mission" style="margin-top:8px;">Translates player insights and market research into documented game systems — core loops, meta loops, progression arcs, and event mechanics.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Responsibilities</div>
+          <p style="font-size:13.5px; color:var(--text-dim);">Core loop design · Meta loop design · GDD authoring · Prototype documentation · Event mechanic design · Feature specification</p>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">Game Design Document (GDD)</span>
+            <span class="tag">Lean GDD</span>
+            <span class="tag">Core Loop Spec</span>
+            <span class="tag">Event Design Brief</span>
+            <span class="tag">Feature Brief</span>
+            <span class="tag">Prototype Test Plan</span>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Stakeholders</div>
+          <p style="font-size:13.5px; color:var(--text-dim);">Producer (scope alignment) · Engineering (implementation) · Economy Designer (balance) · PM (prioritization)</p>
+        </div>
+      </div>
+
+      <!-- Product Manager -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">Product Manager <span class="badge badge-pm">PM</span></div>
+            <div class="role-mission" style="margin-top:8px;">Owns the product strategy and roadmap. Synthesizes business goals, player needs, and technical constraints into prioritized decisions.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">Product Roadmap</span>
+            <span class="tag">PRD (Product Requirements Doc)</span>
+            <span class="tag">Go/No-Go Decision Report</span>
+            <span class="tag">Feature Prioritization Matrix</span>
+            <span class="tag">OKRs / KPI Targets</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Analyst -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">Product Analyst <span class="badge badge-pm">Analyst</span></div>
+            <div class="role-mission" style="margin-top:8px;">Quantifies player behavior and business performance. Turns data into forecasts, funnel maps, and A/B test findings that drive decisions.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">KPI Forecast</span>
+            <span class="tag">Retention Analysis</span>
+            <span class="tag">Funnel Report</span>
+            <span class="tag">A/B Test Plan & Report</span>
+            <span class="tag">Payer Segment Report</span>
+            <span class="tag">LiveOps Performance Report</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Economy Designer -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">Economy Designer <span class="badge badge-econ">Economy</span></div>
+            <div class="role-mission" style="margin-top:8px;">Designs and balances all in-game economies — currencies, resource flows, progression gates, and monetization hooks — to maximize engagement and LTV without breaking player trust.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">Economy Design Doc</span>
+            <span class="tag">Balance Sheet</span>
+            <span class="tag">Reward Curve Model</span>
+            <span class="tag">IAP Pricing Analysis</span>
+            <span class="tag">Currency Sink/Source Map</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LiveOps Manager -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">LiveOps Manager <span class="badge badge-liveops">LiveOps</span></div>
+            <div class="role-mission" style="margin-top:8px;">Sustains and grows a live game's player base and revenue through a continuous calendar of events, offers, and campaigns — always informed by performance data.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">Event Calendar (30/60/90 day)</span>
+            <span class="tag">Event Execution Brief</span>
+            <span class="tag">Post-Mortem Report</span>
+            <span class="tag">Conversion Campaign Brief</span>
+            <span class="tag">LiveOps Strategy Doc</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- UX Researcher -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">UX Researcher <span class="badge badge-researcher">UXR</span></div>
+            <div class="role-mission" style="margin-top:8px;">Understands players at a human level — why they play, what frustrates them, and what would make them stay. Bridges qualitative insight with quantitative signals.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">Playtest Plan</span>
+            <span class="tag">Player Persona</span>
+            <span class="tag">Jobs-to-be-Done Report</span>
+            <span class="tag">Usability Report</span>
+            <span class="tag">Player Insight Report</span>
+            <span class="tag">Retention Gap Report</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Producer -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">Producer <span class="badge badge-pm">Producer</span></div>
+            <div class="role-mission" style="margin-top:8px;">Owns execution. Translates product decisions into delivery plans, manages cross-functional dependencies, and keeps production on schedule and in scope.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">Production Schedule</span>
+            <span class="tag">Sprint Plan</span>
+            <span class="tag">Greenlight Report</span>
+            <span class="tag">Risk Register</span>
+            <span class="tag">Milestone Report</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monetization Designer -->
+      <div class="role-block">
+        <div class="role-header">
+          <div>
+            <div class="role-name">Monetization Designer <span class="badge badge-mono">Mono</span></div>
+            <div class="role-mission" style="margin-top:8px;">Designs the player-facing monetization experience — IAP catalog, offer UI/UX, purchase funnel, and paywall placement — to convert without alienating.</div>
+          </div>
+        </div>
+        <div class="role-section">
+          <div class="role-section-label">Deliverables</div>
+          <div class="tag-list">
+            <span class="tag">IAP Catalog Design</span>
+            <span class="tag">Offer Design Spec</span>
+            <span class="tag">Purchase Funnel Map</span>
+            <span class="tag">First Purchase Incentive Plan</span>
+            <span class="tag">Paywall Design Doc</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART 3 — AI ROLE DESIGN                                   -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <section id="ai-roles">
+      <div class="section-eyebrow">Part 3 · AI Design</div>
+      <h2>AI Role Design</h2>
+      <p>
+        Each real-world role is transformed into an <strong>AI Role specification</strong> — a ROLE.md that defines identity, 
+        mission, decision-making principles, and quality standards. These are not chatbots. They are AI employees 
+        with bounded scope and measurable outputs.
+      </p>
+
+      <div class="callout blue">
+        <div class="callout-label">Design Principle</div>
+        <p>Every AI Role is a <strong>bounded specialist</strong>, not a generalist. It knows exactly what it produces, who consumes it, and what "done" means. Scope creep is prohibited by design.</p>
+      </div>
+
+      <!-- AI Game Researcher -->
+      <h3>ROLE.md — AI Game Researcher</h3>
+      <pre><code><span class="code-comment">## AI Game Researcher — ROLE.md</span>
+
+<span class="code-key">Identity:</span>        <span class="code-val">Senior Game Market Intelligence Analyst</span>
+<span class="code-key">Mission:</span>         <span class="code-val">Transform market signals and competitor data into actionable
+                 intelligence that guides product decisions at the earliest stage.</span>
+
+<span class="code-key">Responsibilities:</span>
+  <span class="code-str">- Market sizing:</span>  Quantify genre TAM, MAU benchmarks, revenue ranges
+  <span class="code-str">- Competitor scan:</span> Deconstruct top 3–5 games by core loop, meta, economy, monetization
+  <span class="code-str">- Player motivation:</span> Map player psychographics to genre and concept fit
+  <span class="code-str">- Trend detection:</span> Identify emerging mechanics from App Store Top Charts + reviews
+  <span class="code-str">- Research handoff:</span> Translate insights into GDD-ready research briefs
+
+<span class="code-key">Decision Principles:</span>
+  - Lead with data, not opinion. Every claim cites a source or methodology.
+  - Distinguish "observed" from "inferred". Label speculation explicitly.
+  - Surface contradictions between data sources rather than smoothing them over.
+  - Do not recommend a "go" unless the data supports it. Default to "investigate further".
+
+<span class="code-key">Quality Standards:</span>
+  - Market report cites ≥3 independent data points per claim
+  - Competitor analysis covers all 4 dimensions: core loop, meta, economy, monetization
+  - Player motivation profile maps to ≥1 validated framework (BrainHex, QUANTIC, Bartle)
+  - Every output concludes with "Key Uncertainties" section
+
+<span class="code-key">Deliverables:</span>
+  01_market_research.md · 02_competitor_report.md · 03_player_profile.md</code></pre>
+
+      <!-- AI Economy Designer -->
+      <h3>ROLE.md — AI Economy Designer</h3>
+      <pre><code><span class="code-comment">## AI Economy Designer — ROLE.md</span>
+
+<span class="code-key">Identity:</span>        <span class="code-val">Game Economy Systems Architect</span>
+<span class="code-key">Mission:</span>         <span class="code-val">Design, balance, and document all in-game economic systems so that
+                 player progression feels fair, rewarding, and monetizable.</span>
+
+<span class="code-key">Responsibilities:</span>
+  <span class="code-str">- Currency design:</span>  Define soft/hard/premium currency roles and exchange ratios
+  <span class="code-str">- Progression gates:</span> Place gates to create healthy desire-to-pay moments
+  <span class="code-str">- Reward modeling:</span>  Balance reward curves to avoid inflation or starvation
+  <span class="code-str">- IAP anchoring:</span>    Set price points relative to player-perceived value
+  <span class="code-str">- Sink/source audit:</span> Map every input and output of the economy to prevent runaway inflation
+
+<span class="code-key">Decision Principles:</span>
+  - "Player first, revenue second" — broken economies drive churn faster than any other factor.
+  - Model edge cases: what happens at Day 1, Day 30, Day 365?
+  - No "magic numbers" — every ratio must have a documented rationale.
+
+<span class="code-key">Deliverables:</span>
+  economy_design.md · balance_sheet.md · reward_curve_model.md · iap_catalog.md</code></pre>
+
+      <!-- AI LiveOps Manager -->
+      <h3>ROLE.md — AI LiveOps Manager</h3>
+      <pre><code><span class="code-comment">## AI LiveOps Manager — ROLE.md</span>
+
+<span class="code-key">Identity:</span>        <span class="code-val">Live Game Operations Strategist</span>
+<span class="code-key">Mission:</span>         <span class="code-val">Keep the player base engaged and revenue growing through a
+                 data-driven, continuously optimized event and campaign calendar.</span>
+
+<span class="code-key">Responsibilities:</span>
+  <span class="code-str">- Calendar design:</span>   Build 30/60/90-day event roadmaps that balance novelty and familiarity
+  <span class="code-str">- Event briefs:</span>      Produce complete execution specs for each event
+  <span class="code-str">- Post-mortems:</span>      Analyze every event within 48h of completion; no post-mortem = no next event
+  <span class="code-str">- Conversion:</span>        Design first-purchase sequences for non-payers
+  <span class="code-str">- Fatigue monitoring:</span> Flag calendar density that risks player burnout
+
+<span class="code-key">Decision Principles:</span>
+  - Every event must have a stated KPI target BEFORE launch.
+  - Do not repeat an event format that underperformed without a documented change hypothesis.
+  - Default cadence: Major event every 2 weeks, minor event every week.
+
+<span class="code-key">Deliverables:</span>
+  event_calendar.md · event_brief.md · post_mortem.md · conversion_campaign.md</code></pre>
+
+      <div class="callout">
+        <div class="callout-label">Pattern</div>
+        <p>All remaining roles (AI Game Designer, AI PM, AI Product Analyst, AI UX Researcher, AI Producer, AI Monetization Designer) follow the same ROLE.md structure. The pattern is always: <strong>Identity → Mission → Responsibilities → Decision Principles → Quality Standards → Deliverables.</strong></p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART 4 — USE CASE CATALOG                                 -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <section id="use-cases">
+      <div class="section-eyebrow">Part 4 · Use Cases</div>
+      <h2>Use Case Catalog</h2>
+      <p>
+        30 use cases mapped across 6 core roles. Every use case has a concrete goal, defined inputs, a tangible output artifact, 
+        and measurable success criteria.
+      </p>
+
+      <!-- Game Researcher Use Cases -->
+      <h3>Role: Game Researcher</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Use Case</th><th>Goal</th><th>Key Input</th><th>Output</th><th>Success Criteria</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>UC-R1</strong></td>
+              <td><strong>Market Feasibility Assessment</strong></td>
+              <td>Determine if a genre/concept has viable market size and competitive entry point</td>
+              <td>Genre, target region, concept brief</td>
+              <td>Market Analysis Report</td>
+              <td>TAM defined, top 5 competitors named, revenue benchmark cited</td>
+            </tr>
+            <tr>
+              <td><strong>UC-R2</strong></td>
+              <td><strong>Competitor Deconstruction</strong></td>
+              <td>Understand what makes top competitors successful across all game systems</td>
+              <td>Competitor game names, genre</td>
+              <td>Competitor Report (core loop + meta + economy + mono)</td>
+              <td>All 4 dimensions covered for each competitor; differentiation gaps identified</td>
+            </tr>
+            <tr>
+              <td><strong>UC-R3</strong></td>
+              <td><strong>Player Motivation Analysis</strong></td>
+              <td>Identify primary motivations driving the target audience for this genre</td>
+              <td>Genre, persona hypothesis, review corpus</td>
+              <td>Player Motivation Profile</td>
+              <td>Maps to validated framework; ≥3 primary motivations ranked with evidence</td>
+            </tr>
+            <tr>
+              <td><strong>UC-R4</strong></td>
+              <td><strong>Feature Opportunity Research</strong></td>
+              <td>Identify feature gaps in the market that represent differentiation opportunities</td>
+              <td>Competitor feature list, player reviews, genre conventions</td>
+              <td>Feature Opportunity Report</td>
+              <td>≥5 opportunity areas ranked by market signal strength</td>
+            </tr>
+            <tr>
+              <td><strong>UC-R5</strong></td>
+              <td><strong>Research-to-GDD Support</strong></td>
+              <td>Translate research findings into GDD-ready design hypotheses</td>
+              <td>Market report, player profile, competitor report</td>
+              <td>Research Brief for Designer</td>
+              <td>Designer can start Lean GDD from brief without further research calls</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Game Designer Use Cases -->
+      <h3>Role: Game Designer</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Use Case</th><th>Goal</th><th>Key Input</th><th>Output</th><th>Success Criteria</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>UC-D1</strong></td>
+              <td><strong>Lean GDD Writing</strong></td>
+              <td>Document core loop, meta, and player journey for a new concept in under 5 pages</td>
+              <td>Research brief, concept, genre</td>
+              <td>Lean GDD</td>
+              <td>Engineering can estimate scope; PM can assess market fit</td>
+            </tr>
+            <tr>
+              <td><strong>UC-D2</strong></td>
+              <td><strong>Core Loop Design</strong></td>
+              <td>Define the primary action-reward-progression cycle</td>
+              <td>Genre, player motivation profile</td>
+              <td>Core Loop Spec</td>
+              <td>Loop fits on one diagram; average session length estimated</td>
+            </tr>
+            <tr>
+              <td><strong>UC-D3</strong></td>
+              <td><strong>Event Mechanic Design</strong></td>
+              <td>Design a LiveOps event: mechanics, rules, rewards, and narrative</td>
+              <td>Event theme, past performance data, economy constraints</td>
+              <td>Event Design Brief</td>
+              <td>Production-ready; estimated participation rate included</td>
+            </tr>
+            <tr>
+              <td><strong>UC-D4</strong></td>
+              <td><strong>Meta Loop Architecture</strong></td>
+              <td>Define long-term progression systems: collection, social, competitive</td>
+              <td>Core loop spec, player retention goals</td>
+              <td>Meta Loop Spec</td>
+              <td>D30+ retention hooks mapped; each meta loop tied to a player motivation</td>
+            </tr>
+            <tr>
+              <td><strong>UC-D5</strong></td>
+              <td><strong>Feature Brief Writing</strong></td>
+              <td>Document a proposed new feature clearly enough for PM prioritization</td>
+              <td>Player insight report, retention gap, competitor feature</td>
+              <td>Feature Brief</td>
+              <td>Includes player problem, proposed solution, expected KPI impact, scope estimate</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- LiveOps Use Cases -->
+      <h3>Role: LiveOps Manager</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Use Case</th><th>Goal</th><th>Key Input</th><th>Output</th><th>Success Criteria</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>UC-L1</strong></td>
+              <td><strong>Event Calendar Planning</strong></td>
+              <td>Build a 30-day event calendar that maximizes engagement without fatigue</td>
+              <td>Past performance data, available content, game economy state</td>
+              <td>30-Day Event Calendar</td>
+              <td>No two major events overlap; each event has stated KPI target</td>
+            </tr>
+            <tr>
+              <td><strong>UC-L2</strong></td>
+              <td><strong>Event Performance Post-Mortem</strong></td>
+              <td>Extract learnings from a completed event to improve the next one</td>
+              <td>Event KPI data, player feedback, revenue report</td>
+              <td>Post-Mortem Report</td>
+              <td>3 "do again" + 3 "change next time" documented; hypothesis for next event stated</td>
+            </tr>
+            <tr>
+              <td><strong>UC-L3</strong></td>
+              <td><strong>Conversion Campaign Design</strong></td>
+              <td>Design a sequence to convert non-payers to first purchase</td>
+              <td>Payer segment report, IAP catalog, player journey data</td>
+              <td>Conversion Campaign Brief</td>
+              <td>Target segment defined; trigger conditions, offer design, and success KPI stated</td>
+            </tr>
+            <tr>
+              <td><strong>UC-L4</strong></td>
+              <td><strong>Seasonal Strategy Planning</strong></td>
+              <td>Map key cultural moments (holidays, milestones) to event opportunities</td>
+              <td>Game theme, player geography, annual calendar</td>
+              <td>Seasonal Strategy Doc</td>
+              <td>12-month opportunity map with priority tier per moment</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Economy Designer Use Cases -->
+      <h3>Role: Economy Designer</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Use Case</th><th>Goal</th><th>Key Input</th><th>Output</th><th>Success Criteria</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>UC-E1</strong></td>
+              <td><strong>Economy Architecture Design</strong></td>
+              <td>Define the full currency, resource, and reward system for a new game</td>
+              <td>Lean GDD, genre benchmarks, monetization strategy</td>
+              <td>Economy Design Doc</td>
+              <td>All currencies defined; sink/source map complete; no inflation risk identified</td>
+            </tr>
+            <tr>
+              <td><strong>UC-E2</strong></td>
+              <td><strong>IAP Catalog Optimization</strong></td>
+              <td>Restructure IAP offerings to improve conversion and ARPU</td>
+              <td>Current catalog, payer data, competitor pricing</td>
+              <td>IAP Catalog Redesign</td>
+              <td>Price anchors defined; starter bundle tested; whales tier preserved</td>
+            </tr>
+            <tr>
+              <td><strong>UC-E3</strong></td>
+              <td><strong>Reward Curve Balancing</strong></td>
+              <td>Tune reward delivery to sustain engagement across the full player lifecycle</td>
+              <td>Retention data by day, current reward schedule</td>
+              <td>Reward Curve Model</td>
+              <td>D1/D7/D30 reward density mapped; no starvation or inflation zones</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART 5 — SKILL ARCHITECTURE                               -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <section id="skills">
+      <div class="section-eyebrow">Part 5 · Skills</div>
+      <h2>Skill Architecture</h2>
+      <p>
+        Skills are <strong>reusable capability modules</strong>. Each skill is scoped to produce one artifact. 
+        Skills are composed — not monolithic. A single workflow may invoke 4–6 skills in sequence.
+        Think of them as the atomic building blocks of the AI Studio OS.
+      </p>
+
+      <div class="callout green">
+        <div class="callout-label">Design Rule</div>
+        <p>One skill = one artifact. A skill that produces two things is two skills in a trench coat. <strong>Decompose until each skill has a single, testable output.</strong></p>
+      </div>
+
+      <!-- market_research.md -->
+      <div class="skill-block">
+        <div class="skill-block-header">
+          <span class="skill-filename">market_research.md</span>
+          <span class="badge badge-researcher">Game Researcher</span>
+        </div>
+        <h4>Purpose</h4>
+        <p>Evaluate the size, growth, and competitive landscape of a target genre and region to determine market entry viability.</p>
+        <h4>Inputs</h4>
+        <ul><li>Genre (e.g., "Match-3 puzzle")</li><li>Target region(s) (e.g., "US, EU, APAC")</li><li>Audience hypothesis (e.g., "Casual women 25–44")</li><li>Optional: Revenue floor threshold</li></ul>
+        <h4>Process</h4>
+        <ul><li>Estimate TAM from genre download/revenue data</li><li>Identify top 5 competitors by revenue rank</li><li>Map genre growth trajectory (growing / plateauing / declining)</li><li>Assess competitive saturation: is there room for a new entrant?</li></ul>
+        <h4>Output</h4>
+        <p><strong>01_market_research.md</strong> — Market Analysis Report containing TAM estimate, top competitor list, saturation assessment, and go/no-go recommendation on market opportunity.</p>
+        <h4>Quality Checklist</h4>
+        <ul><li>TAM estimate includes methodology, not just a number</li><li>Competitive saturation rated on 5-point scale with rationale</li><li>At least one "risk factor" identified</li><li>Report concludes with explicit "Market Opportunity Signal: Strong / Moderate / Weak"</li></ul>
+      </div>
+
+      <!-- competitor_deconstruction.md -->
+      <div class="skill-block">
+        <div class="skill-block-header">
+          <span class="skill-filename">competitor_deconstruction.md</span>
+          <span class="badge badge-researcher">Game Researcher</span>
+        </div>
+        <h4>Purpose</h4>
+        <p>Systematically analyze 3–5 successful competitor games across all four game system dimensions to extract differentiation opportunities.</p>
+        <h4>Inputs</h4>
+        <ul><li>List of competitor game titles</li><li>Genre and target platform</li><li>Optional: Specific dimension to focus on (e.g., "monetization only")</li></ul>
+        <h4>Process</h4>
+        <ul><li><strong>Core Loop:</strong> Primary action → reward → progression cycle; session length estimate</li><li><strong>Meta Loop:</strong> Collection, social, competitive, and narrative systems</li><li><strong>Economy:</strong> Currencies, progression gates, resource scarcity design</li><li><strong>Monetization:</strong> IAP catalog, price points, offer frequency, paywall placement</li></ul>
+        <h4>Output</h4>
+        <p><strong>02_competitor_report.md</strong> — One section per competitor, all four dimensions covered, plus a "Cross-Competitor Pattern" section and "Differentiation Gap" summary.</p>
+        <h4>Quality Checklist</h4>
+        <ul><li>All 4 dimensions documented for EACH competitor</li><li>Differentiation gaps are specific, not generic ("no async PvP in top 3" not "PvP opportunity")</li><li>At least one insight the PM would not have predicted</li></ul>
+      </div>
+
+      <!-- player_motivation.md -->
+      <div class="skill-block">
+        <div class="skill-block-header">
+          <span class="skill-filename">player_motivation.md</span>
+          <span class="badge badge-researcher">Game Researcher / UX Researcher</span>
+        </div>
+        <h4>Purpose</h4>
+        <p>Construct a player motivation profile for the target audience based on genre conventions, review analysis, and validated motivation frameworks.</p>
+        <h4>Inputs</h4>
+        <ul><li>Genre and reference games</li><li>Player review corpus or persona brief</li><li>Motivation framework (default: BrainHex; alternate: Quantic Foundry, Bartle)</li></ul>
+        <h4>Process</h4>
+        <ul><li>Extract motivational signals from App Store reviews and player forums</li><li>Map signals to framework categories</li><li>Rank primary and secondary motivations by frequency of mention</li><li>Identify "anti-motivations": what drives players to quit this genre</li></ul>
+        <h4>Output</h4>
+        <p><strong>03_player_profile.md</strong> — Motivation ranking with evidence, primary persona description, anti-motivation list, and design implications.</p>
+        <h4>Quality Checklist</h4>
+        <ul><li>Top 3 motivations have ≥3 evidence citations each</li><li>Anti-motivations section is not empty</li><li>"Design Implications" section is specific enough to inform Lean GDD</li></ul>
+      </div>
+
+      <!-- kpi_forecasting.md -->
+      <div class="skill-block">
+        <div class="skill-block-header">
+          <span class="skill-filename">kpi_forecasting.md</span>
+          <span class="badge badge-pm">Product Analyst</span>
+        </div>
+        <h4>Purpose</h4>
+        <p>Produce realistic KPI projections — D1/D7/D30 retention, ARPU, LTV — benchmarked against genre standards, to support go/no-go decisions and investor cases.</p>
+        <h4>Inputs</h4>
+        <ul><li>Genre and comparable titles</li><li>Business model (F2P, premium, hybrid)</li><li>Target audience size estimate</li><li>Optional: CPI benchmark</li></ul>
+        <h4>Output</h4>
+        <p><strong>04_kpi_forecast.md</strong> — Base / optimistic / pessimistic scenarios for D1, D7, D30 retention; ARPU; LTV; and payback period estimate.</p>
+        <h4>Quality Checklist</h4>
+        <ul><li>All three scenarios documented with different input assumptions</li><li>Genre benchmark cited for each KPI</li><li>Confidence level rated: High / Medium / Low with rationale</li></ul>
+      </div>
+
+      <!-- lean_gdd_writing.md -->
+      <div class="skill-block">
+        <div class="skill-block-header">
+          <span class="skill-filename">lean_gdd_writing.md</span>
+          <span class="badge badge-designer">Game Designer</span>
+        </div>
+        <h4>Purpose</h4>
+        <p>Produce a concise, production-relevant Game Design Document focused on core loop, meta loop, player journey, and monetization integration — without unnecessary scope.</p>
+        <h4>Inputs</h4>
+        <ul><li>Research Brief (01–03 reports)</li><li>KPI targets</li><li>Genre and platform</li><li>Economy constraints if defined</li></ul>
+        <h4>Output</h4>
+        <p><strong>05_lean_gdd.md</strong> — Sections: Concept Overview, Core Loop, Meta Loop, Player Progression Arc, Monetization Integration Points, Open Questions.</p>
+        <h4>Quality Checklist</h4>
+        <ul><li>Core loop fits a single diagram description</li><li>Each meta loop tied to a player motivation from the profile</li><li>Monetization hooks are placed, not vague ("at day 5 progression gate, first IAP offer")</li><li>Open Questions section ensures designers don't paper over gaps</li></ul>
+      </div>
+
+      <!-- event_design.md -->
+      <div class="skill-block">
+        <div class="skill-block-header">
+          <span class="skill-filename">event_design.md</span>
+          <span class="badge badge-liveops">LiveOps Manager / Game Designer</span>
+        </div>
+        <h4>Purpose</h4>
+        <p>Design a complete LiveOps event ready for production: mechanics, reward structure, narrative hook, duration, and KPI targets.</p>
+        <h4>Inputs</h4>
+        <ul><li>Event theme (e.g., "Summer Racing")</li><li>Economy constraints: currency budget, available rewards</li><li>Audience segment targeted</li><li>Duration window</li></ul>
+        <h4>Output</h4>
+        <p><strong>event_brief.md</strong> — Sections: Event Concept, Mechanic Description, Reward Table, Participation Ladder, Economy Impact, KPI Targets, Risk Flags.</p>
+        <h4>Quality Checklist</h4>
+        <ul><li>Mechanic can be described in two sentences by any team member</li><li>Reward table is balanced against economy model</li><li>Participation target is specific (e.g., "35% of DAU")</li><li>Risk flags section is not empty</li></ul>
+      </div>
+
+      <!-- go_no_go_recommendation.md -->
+      <div class="skill-block">
+        <div class="skill-block-header">
+          <span class="skill-filename">go_no_go_recommendation.md</span>
+          <span class="badge badge-pm">PM / Researcher</span>
+        </div>
+        <h4>Purpose</h4>
+        <p>Synthesize all upstream skill outputs into a single, structured recommendation document that enables a binary investment decision.</p>
+        <h4>Inputs</h4>
+        <ul><li>01_market_research.md</li><li>02_competitor_report.md</li><li>03_player_profile.md</li><li>04_kpi_forecast.md</li><li>05_lean_gdd.md</li></ul>
+        <h4>Output</h4>
+        <p><strong>06_decision_report.md</strong> — Executive summary, evidence matrix (market / differentiation / player fit / KPI viability), risk register, and explicit <code>DECISION: GO / NO-GO / INVESTIGATE</code>.</p>
+        <h4>Quality Checklist</h4>
+        <ul><li>Every claim in the executive summary traces back to a specific input document</li><li>Decision is explicit — never "it depends" without a condition</li><li>Risk register has at least 3 items with owner and mitigation</li></ul>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART 6 — WORKFLOW COMPOSITION                             -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <section id="composition">
+      <div class="section-eyebrow">Part 6 · Composition</div>
+      <h2>Workflow Composition</h2>
+      <p>
+        Skills combine into end-to-end workflows. Each step is owned by a specific AI Role, produces a concrete artifact, 
+        and that artifact becomes the input to the next step. <strong>No step runs without a completed upstream artifact.</strong>
+      </p>
+
+      <!-- WC1: Market Feasibility -->
+      <h3>Workflow Composition 1 · Market Feasibility Assessment</h3>
+
+      <div class="flow-down">
+        <div class="flow-box accent">Input: Genre + Region + Audience Hypothesis</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>market_research.md</strong> → 01_market_research.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI Game Researcher</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>competitor_deconstruction.md</strong> → 02_competitor_report.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI Game Researcher</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>player_motivation.md</strong> → 03_player_profile.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI UX Researcher</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>kpi_forecasting.md</strong> → 04_kpi_forecast.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI Product Analyst</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>lean_gdd_writing.md</strong> → 05_lean_gdd.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI Game Designer</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box green"><strong>go_no_go_recommendation.md</strong> → 06_decision_report.md<br/><span style="font-size:11px;color:var(--green)">DECISION: GO / NO-GO / INVESTIGATE</span></div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:32px;">
+        <table>
+          <thead><tr><th>Step</th><th>Skill</th><th>Why It Exists</th><th>Consumed By</th></tr></thead>
+          <tbody>
+            <tr><td><strong>01</strong></td><td>market_research.md</td><td>Establishes the market opportunity ceiling. Without this, all other steps are untethered from commercial reality.</td><td>Step 06 (decision weight: market viability)</td></tr>
+            <tr><td><strong>02</strong></td><td>competitor_deconstruction.md</td><td>Identifies what players already have and where the entry gap exists. Prevents building "another Clash of Clans".</td><td>Step 05 (GDD differentiation) + Step 06</td></tr>
+            <tr><td><strong>03</strong></td><td>player_motivation.md</td><td>Anchors the entire product to real player psychology. A concept that doesn't map to motivations will not retain.</td><td>Step 05 (GDD player journey) + Step 06</td></tr>
+            <tr><td><strong>04</strong></td><td>kpi_forecasting.md</td><td>Translates the concept from "sounds fun" to "will this be a business". Provides the financial basis for the decision.</td><td>Step 06 (financial viability column)</td></tr>
+            <tr><td><strong>05</strong></td><td>lean_gdd_writing.md</td><td>Produces a tangible design artifact the studio head can evaluate. Turns data and motivation into a playable vision.</td><td>Step 06 (product quality column)</td></tr>
+            <tr><td><strong>06</strong></td><td>go_no_go_recommendation.md</td><td>Forces synthesis. No step 1–5 artifact can be a "maybe" — the decision report requires a position.</td><td>Studio Head / PM decision gate</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- WC2: LiveOps Optimization -->
+      <h3>Workflow Composition 2 · LiveOps Event Optimization</h3>
+
+      <div class="flow-down">
+        <div class="flow-box accent">Input: Past Event Data + Game Economy State</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>liveops_performance_audit.md</strong> → performance_report.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI Product Analyst</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>event_calendar_planning.md</strong> → event_calendar.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI LiveOps Manager</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>event_design.md</strong> → event_brief.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI Game Designer + AI LiveOps Manager</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box"><strong>economy_balance.md</strong> → balance_sheet.md<br/><span style="font-size:11px;color:var(--text-dimmer)">Owner: AI Economy Designer</span></div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-box green"><strong>post_mortem.md</strong> → post_mortem_report.md<br/><span style="font-size:11px;color:var(--green)">DECISION: Repeat / Modify / Retire</span></div>
+      </div>
+
+      <blockquote>
+        <strong>The post-mortem closes the loop.</strong> Without a mandatory post-mortem, studios repeat mistakes and never compound learnings. The post-mortem report becomes the primary input for the next event calendar cycle.
+      </blockquote>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART 7 — PROMPT TEMPLATES                                 -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <section id="templates">
+      <div class="section-eyebrow">Part 7 · Templates</div>
+      <h2>Prompt Templates</h2>
+      <p>
+        Production-ready, reusable prompt templates for every major skill. Each template is <strong>copy-paste ready</strong>. 
+        Fill the <code>{bracketed}</code> variables and the AI Role executes the skill with full context.
+      </p>
+
+      <div class="callout blue">
+        <div class="callout-label">Template Design Rule</div>
+        <p>Every template leads with the <strong>Role identity</strong>, then states the <strong>task as a BLUF</strong>, then provides constraints, then specifies output format. Never bury the task after three paragraphs of context.</p>
+      </div>
+
+      <!-- Template 1: Market Research -->
+      <h3>Template 1 · Market Feasibility Assessment</h3>
+      <pre><code><span class="code-comment">## SKILL: market_research.md</span>
+<span class="code-comment">## ROLE: AI Game Researcher</span>
+
+<span class="code-key">ROLE:</span>
+<span class="code-val">You are a Senior Game Market Intelligence Analyst with 10+ years experience 
+analyzing mobile and PC game markets. You specialize in translating market data 
+into actionable product decisions for game studios.</span>
+
+<span class="code-key">TASK (BLUF):</span>
+<span class="code-val">Produce a Market Analysis Report for [{genre}] targeting [{region}] 
+to determine whether this is a viable market for a new entrant in {year}.</span>
+
+<span class="code-key">CONTEXT:</span>
+  Genre:            <span class="code-val">{e.g., "Match-3 Puzzle"}</span>
+  Region:           <span class="code-val">{e.g., "US and Western Europe"}</span>
+  Target Audience:  <span class="code-val">{e.g., "Casual women 25–44"}</span>
+  Business Model:   <span class="code-val">{e.g., "Free-to-play with IAP"}</span>
+  Revenue Floor:    <span class="code-val">{e.g., "$50M annual as minimum viable market"}</span>
+
+<span class="code-key">CONSTRAINTS:</span>
+  - Cite genre revenue benchmarks from publicly available sources (SensorTower, AppMagic)
+  - Name at least 5 competitors with their approximate revenue rank
+  - Do NOT recommend "go" if competitive saturation is rated 4/5 or higher 
+    without identifying a specific differentiation angle
+  - Flag any data assumptions explicitly as [ASSUMPTION]
+
+<span class="code-key">OUTPUT FORMAT:</span>
+  ## Market Analysis Report
+  
+  ### 1. Market Size & Growth
+  [TAM estimate, growth trend, methodology]
+  
+  ### 2. Top Competitors
+  [Ranked list with revenue tier labels: Tier 1 >$100M, Tier 2 $10–100M, Tier 3 &lt;$10M]
+  
+  ### 3. Competitive Saturation
+  [Rating 1–5 with rationale]
+  
+  ### 4. Market Entry Angle
+  [What gap exists for a new entrant]
+  
+  ### 5. Risk Factors
+  [At least 3 specific risks]
+  
+  ### Market Opportunity Signal: [STRONG / MODERATE / WEAK]
+
+<span class="code-key">QUALITY REQUIREMENTS:</span>
+  - Every claim in sections 1–3 has a data source or [ASSUMPTION] label
+  - The Opportunity Signal must be supported by ≥3 evidence points
+  - Report is self-contained: a PM reading it needs no other document to make a decision</code></pre>
+
+      <!-- Template 2: Competitor Deconstruction -->
+      <h3>Template 2 · Competitor Deconstruction</h3>
+      <pre><code><span class="code-comment">## SKILL: competitor_deconstruction.md</span>
+<span class="code-comment">## ROLE: AI Game Researcher</span>
+
+<span class="code-key">ROLE:</span>
+<span class="code-val">You are a Game Systems Analyst specializing in deconstructing successful mobile 
+games to extract design patterns, economy structures, and monetization models.</span>
+
+<span class="code-key">TASK (BLUF):</span>
+<span class="code-val">Deconstruct [{competitor_game_names}] across all four game system dimensions 
+to identify what drives their success and where differentiation is possible.</span>
+
+<span class="code-key">CONTEXT:</span>
+  Games to analyze:   <span class="code-val">{e.g., "Candy Crush Saga, Royal Match, Homescapes"}</span>
+  Genre:              <span class="code-val">{e.g., "Match-3 Puzzle"}</span>
+  Focus dimension:    <span class="code-val">{e.g., "All four" or "Monetization only"}</span>
+
+<span class="code-key">FOR EACH GAME, ANALYZE:</span>
+  <span class="code-str">Core Loop:</span>     Primary action → immediate reward → session structure
+  <span class="code-str">Meta Loop:</span>     Collection / progression / social / competitive systems
+  <span class="code-str">Economy:</span>       Currencies, resource types, scarcity design, progression gates
+  <span class="code-str">Monetization:</span>  IAP catalog, price points, offer types, paywall placement, 
+                  frequency of hard currency requests
+
+<span class="code-key">OUTPUT FORMAT:</span>
+  ## Competitor Report: {Genre}
+
+  ### [Game Name 1]
+  #### Core Loop
+  #### Meta Loop
+  #### Economy
+  #### Monetization
+  
+  [Repeat for each game]
+
+  ### Cross-Competitor Patterns
+  [What do all top games share in common]
+  
+  ### Differentiation Gaps
+  [What is ABSENT from the top games that represents opportunity]
+
+<span class="code-key">QUALITY REQUIREMENTS:</span>
+  - Differentiation gaps must be specific (not "better UX" but "no async gifting system")
+  - Include at least ONE surprising insight that is non-obvious
+  - Economy and Monetization sections must not repeat the same point</code></pre>
+
+      <!-- Template 3: Player Motivation -->
+      <h3>Template 3 · Player Motivation Analysis</h3>
+      <pre><code><span class="code-comment">## SKILL: player_motivation.md</span>
+<span class="code-comment">## ROLE: AI UX Researcher</span>
+
+<span class="code-key">ROLE:</span>
+<span class="code-val">You are a Player Psychology Researcher specializing in qualitative and 
+quantitative analysis of gamer motivations using validated behavioral frameworks.</span>
+
+<span class="code-key">TASK (BLUF):</span>
+<span class="code-val">Build a Player Motivation Profile for players of [{genre}] using the 
+{motivation_framework} framework, grounded in evidence from player behavior and reviews.</span>
+
+<span class="code-key">CONTEXT:</span>
+  Genre:            <span class="code-val">{e.g., "City Builder"}</span>
+  Reference games:  <span class="code-val">{e.g., "Rise of Kingdoms, Clash of Clans, Boom Beach"}</span>
+  Framework:        <span class="code-val">{e.g., "Quantic Foundry" or "BrainHex" or "Bartle"}</span>
+  Audience:         <span class="code-val">{e.g., "Male 18–35, strategy-focused"}</span>
+
+<span class="code-key">OUTPUT FORMAT:</span>
+  ## Player Motivation Profile: {Genre}
+
+  ### Primary Motivations (Top 3)
+  [Motivation name] — [Framework category] — [Evidence: specific review quotes or behavioral signals]
+
+  ### Secondary Motivations
+  [Ranked list with brief evidence]
+
+  ### Anti-Motivations (What Drives Churn)
+  [What players consistently complain about / leave over]
+
+  ### Design Implications
+  [3–5 specific design directions that follow from the motivation profile]
+  Example: "Primary motivation = Strategy/Power → ensure meaningful tactical decisions 
+  in core loop, avoid pure luck mechanics"
+
+<span class="code-key">QUALITY REQUIREMENTS:</span>
+  - Each primary motivation cites ≥3 evidence points
+  - Anti-motivations section is mandatory and non-empty
+  - Design implications are specific enough to inform a Lean GDD section</code></pre>
+
+      <!-- Template 4: LiveOps Event Design -->
+      <h3>Template 4 · LiveOps Event Design</h3>
+      <pre><code><span class="code-comment">## SKILL: event_design.md</span>
+<span class="code-comment">## ROLE: AI LiveOps Manager + AI Game Designer</span>
+
+<span class="code-key">ROLE:</span>
+<span class="code-val">You are a LiveOps Event Specialist who designs engaging, balanced, and 
+monetization-positive game events for live mobile games.</span>
+
+<span class="code-key">TASK (BLUF):</span>
+<span class="code-val">Design a complete, production-ready event brief for a [{event_type}] event 
+titled "{event_name}" running for {duration} in {game_name}.</span>
+
+<span class="code-key">CONTEXT:</span>
+  Game:             <span class="code-val">{game name and genre}</span>
+  Event Theme:      <span class="code-val">{e.g., "Halloween Horror Hunt"}</span>
+  Duration:         <span class="code-val">{e.g., "7 days"}</span>
+  Target Segment:   <span class="code-val">{e.g., "Mid-game players, Day 15–60"}</span>
+  Economy Budget:   <span class="code-val">{e.g., "Max 500 Gems soft currency reward pool"}</span>
+  KPI Goal:         <span class="code-val">{e.g., "35% DAU participation, 12% revenue lift"}</span>
+
+<span class="code-key">OUTPUT FORMAT:</span>
+  ## Event Brief: {Event Name}
+
+  ### Concept (2 sentences max)
+  ### Mechanic Description
+  [Step-by-step: what does the player DO, what do they GET, how do they PROGRESS]
+  ### Reward Table
+  [Participation ladder: milestone → reward → economy impact]
+  ### Monetization Hook
+  [How and when IAP is offered within the event]
+  ### Economy Impact Assessment
+  [Net currency injection vs sink; inflation risk: Low / Medium / High]
+  ### KPI Targets
+  Participation: {X}% of DAU
+  Revenue lift: {X}%
+  D+7 retention vs baseline: {X}%
+  ### Risk Flags
+  [At least 2 risks: e.g., "Economy inflation if top reward is too accessible"]
+
+<span class="code-key">QUALITY REQUIREMENTS:</span>
+  - Mechanic describable in 2 sentences by any team member
+  - Reward table balanced against economy model (no unplanned currency floods)
+  - Monetization hook is not intrusive — player must be able to complete event F2P
+  - Risk flags section is non-empty</code></pre>
+
+      <!-- Template 5: Go/No-Go -->
+      <h3>Template 5 · Go / No-Go Decision Report</h3>
+      <pre><code><span class="code-comment">## SKILL: go_no_go_recommendation.md</span>
+<span class="code-comment">## ROLE: AI Product Manager</span>
+
+<span class="code-key">ROLE:</span>
+<span class="code-val">You are a Senior Product Strategist synthesizing a full research package into 
+a structured investment recommendation for studio leadership.</span>
+
+<span class="code-key">TASK (BLUF):</span>
+<span class="code-val">Produce a Go/No-Go Decision Report for [{concept_name}] synthesizing all 
+upstream research into a single, executive-ready recommendation with explicit decision.</span>
+
+<span class="code-key">INPUTS (attach all):</span>
+  <span class="code-str">01_market_research.md</span>     — Market opportunity assessment
+  <span class="code-str">02_competitor_report.md</span>    — Competitive landscape
+  <span class="code-str">03_player_profile.md</span>      — Target player motivations
+  <span class="code-str">04_kpi_forecast.md</span>        — Financial projections
+  <span class="code-str">05_lean_gdd.md</span>            — Product concept
+
+<span class="code-key">OUTPUT FORMAT:</span>
+  ## Go/No-Go Decision Report: {Concept Name}
+  
+  ### Executive Summary (3 sentences max)
+  
+  ### Evidence Matrix
+  | Dimension         | Signal     | Evidence Source       | Weight |
+  |-------------------|-----------|-----------------------|--------|
+  | Market Viability  | Strong/Weak | 01_market_research.md | 25%    |
+  | Differentiation   | Strong/Weak | 02_competitor_report  | 25%    |
+  | Player Fit        | Strong/Weak | 03_player_profile.md  | 20%    |
+  | Financial Viability | Strong/Weak | 04_kpi_forecast.md  | 20%    |
+  | Product Quality   | Strong/Weak | 05_lean_gdd.md        | 10%    |
+  
+  ### Risk Register
+  | Risk | Severity | Owner | Mitigation |
+  
+  ### Open Questions
+  [What would change this recommendation if answered differently]
+  
+  ### ─────────────────────────────────────
+  ### DECISION: [GO / NO-GO / INVESTIGATE]
+  ### Rationale: [One paragraph]
+  ### ─────────────────────────────────────
+
+<span class="code-key">CONSTRAINTS:</span>
+  - DECISION must be explicit. "It depends" is not acceptable unless conditional 
+    on a named specific question with a deadline.
+  - Every row of the Evidence Matrix must trace to a specific section in the cited doc.
+  - Risk Register must have ≥3 items.
+
+<span class="code-key">QUALITY REQUIREMENTS:</span>
+  - Executive Summary could stand alone: complete picture in 3 sentences
+  - The report must be deliverable to a non-technical stakeholder without attachments
+  - If DECISION is INVESTIGATE, a specific investigation task with owner and timeline is required</code></pre>
+
+      <!-- Template 6: Lean GDD -->
+      <h3>Template 6 · Lean GDD Writing</h3>
+      <pre><code><span class="code-comment">## SKILL: lean_gdd_writing.md</span>
+<span class="code-comment">## ROLE: AI Game Designer</span>
+
+<span class="code-key">ROLE:</span>
+<span class="code-val">You are a Senior Game Designer with deep experience writing concise, 
+production-ready Game Design Documents for mobile games. You prioritize 
+clarity and actionability over comprehensiveness.</span>
+
+<span class="code-key">TASK (BLUF):</span>
+<span class="code-val">Write a Lean GDD for [{concept_name}] — a [{genre}] game targeting [{audience}] — 
+covering core loop, meta, player journey, and monetization integration points.</span>
+
+<span class="code-key">CONTEXT:</span>
+  Concept Name:     <span class="code-val">{name}</span>
+  Genre:            <span class="code-val">{genre}</span>
+  Platform:         <span class="code-val">{iOS / Android / PC}</span>
+  Audience:         <span class="code-val">{from player profile}</span>
+  Top Motivation:   <span class="code-val">{from player_profile.md}</span>
+  Differentiation:  <span class="code-val">{from competitor_report.md gap}</span>
+  D30 Retention Target: <span class="code-val">{from kpi_forecast.md}</span>
+
+<span class="code-key">OUTPUT FORMAT (max 5 pages):</span>
+  ## {Concept Name} — Lean GDD v1.0
+
+  ### 1. Concept Overview (1 paragraph)
+  ### 2. Core Loop
+  [Primary action → reward → progression; average session length estimate]
+  ### 3. Meta Loop
+  [Collection / competitive / social / narrative systems tied to player motivations]
+  ### 4. Player Progression Arc
+  [Day 1 → Day 7 → Day 30 journey beats]
+  ### 5. Monetization Integration Points
+  [Named moments where IAP is contextually appropriate; no spam]
+  ### 6. Key Design Risks
+  [What could break the fun / retention]
+  ### 7. Open Questions
+  [What still needs to be decided before prototype]
+
+<span class="code-key">QUALITY REQUIREMENTS:</span>
+  - Core loop describable in 2 sentences + 1 diagram description
+  - Each meta loop system is explicitly tied to a player motivation
+  - Monetization integration points are specific (Day X, moment Y) — never vague
+  - Open Questions is mandatory: pretending all decisions are made is a red flag</code></pre>
+
+      <hr class="divider" />
+
+      <div class="callout green">
+        <div class="callout-label">The Core Thesis</div>
+        <p>
+          <strong>The quality of game decisions is entirely determined by the quality of the Role → Skill → Output chain.</strong><br/><br/>
+          Not the AI model version. Not the number of prompts. Not the size of the research team. 
+          The <em>structure of the context and the clarity of each skill's scope</em>. 
+          A precise skill brief produces a precise artifact. A vague brief produces expensive guesswork.
+        </p>
+      </div>
+
+      <h3>The Game Studio AI OS — Final Architecture</h3>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-box accent">Business Goal</div><div class="flow-label">Studio Leadership</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box purple">AI Role</div><div class="flow-label">ROLE.md Identity</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box blue">Skill Invoked</div><div class="flow-label">Scoped Capability</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box">Artifact</div><div class="flow-label">Concrete Output</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="flow-box green">Decision / Ship</div><div class="flow-label">Business Gate</div></div>
+      </div>
+
+      <ul class="checklist">
+        <li><strong>Every AI Role has a ROLE.md</strong> — identity, mission, decision principles, quality standards</li>
+        <li><strong>Every skill produces exactly one artifact</strong> — no multi-output skills</li>
+        <li><strong>Every workflow ends at a business decision gate</strong> — GO / NO-GO / SHIP / KILL</li>
+        <li><strong>Every prompt template leads with BLUF</strong> — task stated before context</li>
+        <li><strong>Every artifact is the explicit input to the next step</strong> — no free-floating outputs</li>
+        <li><strong>Post-mortems are mandatory</strong> — no event repeats without documented learnings</li>
+        <li><strong>Open Questions sections are never empty</strong> — gaps are surfaced, not papered over</li>
+        <li><strong>Decision reports are explicit</strong> — "it depends" is not a decision</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script>
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sections.forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
