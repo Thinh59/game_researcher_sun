@@ -1,0 +1,59 @@
+{
+  "name": "concept-validation-pipeline",
+  "template_root": "prompt-templates",
+  "output_dir": "outputs",
+  "variables": {
+    "GAME_GENRE": "Casual Puzzle",
+    "TARGET_REGION": "Southeast Asia (SEA)",
+    "TARGET_AUDIENCE": "Female, 18-35 years old",
+    "CORE_CONCEPT": "Match-3 game combined with social gifting and meta-progression",
+    "TOP_COMPETITORS": "Candy Crush Saga, Royal Match"
+  },
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "task_name": "Market & Demographic Sizing",
+      "agent_role": "market-researcher",
+      "qa_agent": "qa-evaluator",
+      "skill_file": "skills/01_market_research.md",
+      "output_file": "outputs/01_market_sizing.md",
+      "depends_on": []
+    },
+    {
+      "id": "EPIC-002",
+      "task_name": "Core Loop & Retention Mechanics",
+      "agent_role": "game-deconstructor",
+      "qa_agent": "qa-evaluator",
+      "skill_file": "skills/02_deconstruction.md",
+      "output_file": "outputs/02_core_loop.md",
+      "depends_on": ["EPIC-001"]
+    },
+    {
+      "id": "EPIC-003",
+      "task_name": "Economy & Monetization Architecture",
+      "agent_role": "game-deconstructor",
+      "qa_agent": "qa-evaluator",
+      "skill_file": "skills/02_deconstruction.md",
+      "output_file": "outputs/03_economy.md",
+      "depends_on": ["EPIC-002"]
+    },
+    {
+      "id": "EPIC-004",
+      "task_name": "Social Viral Mechanics",
+      "agent_role": "game-deconstructor",
+      "qa_agent": "qa-evaluator",
+      "skill_file": "prompt-templates/skills/02_deconstruction.md",
+      "output_file": "outputs/04_social_viral.md",
+      "depends_on": ["EPIC-002", "EPIC-003"]
+    },
+    {
+      "id": "EPIC-005",
+      "task_name": "Lean GDD Synthesis & Final Verdict",
+      "agent_role": "product-strategist",
+      "qa_agent": "qa-evaluator",
+      "skill_file": "prompt-templates/skills/03_lean_gdd.md",
+      "output_file": "outputs/05_lean_gdd.md",
+      "depends_on": ["EPIC-001", "EPIC-002", "EPIC-003", "EPIC-004"]
+    }
+  ]
+}
